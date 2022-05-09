@@ -42,13 +42,13 @@ class FirstFragment : Fragment() {
         sceneView = view.findViewById(R.id.sceneView)
 
         binding.buttonFirst.setOnClickListener {
-            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
+            anchorFridge()
         }
 
         modelNode = ArModelNode(placementMode = PlacementMode.BEST_AVAILABLE).apply {
             loadModelAsync(
                 context = requireContext(),
-                glbFileLocation = "assets/models/alien.gltf",
+                glbFileLocation = "https://storage.googleapis.com/ar-answers-in-search-models/static/Tiger/model.glb",
                 lifecycle = lifecycle,
                 autoAnimate = true,
                 autoScale = true,
@@ -57,6 +57,10 @@ class FirstFragment : Fragment() {
             )
         }
         sceneView.addChild(modelNode)
+    }
+
+    private fun anchorFridge() {
+        modelNode.anchor()
     }
 
     override fun onDestroyView() {
