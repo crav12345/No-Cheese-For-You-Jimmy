@@ -7,6 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.chrisravosa.nocheeseforyoujimmy.databinding.FragmentFirstBinding
+import io.github.sceneview.ar.ArSceneView
+import io.github.sceneview.ar.node.ArModelNode
+import io.github.sceneview.ar.node.PlacementMode
+import io.github.sceneview.math.Position
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -14,6 +18,9 @@ import com.chrisravosa.nocheeseforyoujimmy.databinding.FragmentFirstBinding
 class FirstFragment : Fragment() {
 
     private var _binding: FragmentFirstBinding? = null
+
+    lateinit var sceneView: ArSceneView
+    lateinit var modelNode: ArModelNode
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -32,9 +39,24 @@ class FirstFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        sceneView = view.findViewById(R.id.sceneView)
+
         binding.buttonFirst.setOnClickListener {
             findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
         }
+
+        modelNode = ArModelNode(placementMode = PlacementMode.BEST_AVAILABLE).apply {
+            loadModelAsync(
+                context = requireContext(),
+                glbFileLocation = "assets/models/alien.gltf",
+                lifecycle = lifecycle,
+                autoAnimate = true,
+                autoScale = true,
+                // Place the model origin at the bottom center
+                centerOrigin = Position(x = 0.0f, y = 0.0f, z = 0.0f)
+            )
+        }
+        sceneView.addChild(modelNode)
     }
 
     override fun onDestroyView() {
